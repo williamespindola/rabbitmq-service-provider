@@ -1,24 +1,23 @@
 {
-    "name": "fiunchinho/rabbitmq-service-provider",
+    "name": "sixt/rabbitmq-service-provider",
     "description": "Silex service provider for RabbitMQ",
     "keywords": [ "amqp", "RabbitMQ", "silex" ],
-    "homepage": "http://github.com/fiunchinho/rabbitmq-service-provider",
+    "homepage": "https://github.com/e-sixt/rabbitmq-service-provider",
     "license": "MIT",
     "authors": [
         {
-            "name": "Jose Armesto",
-            "email": "jose@armesto.net",
-            "homepage": "http://blog.armesto.net"
+            "name": "Anton Stöckl",
+            "email": "anton@stoeckl.de"
         }
     ],
     "require": {
-        "php": ">=5.4.0",
-        "silex/silex": "~1.2",
-        "oldsound/rabbitmq-bundle": "~1.5",
-        "knplabs/console-service-provider": "~1.0"
+        "php": ">=5.5.0",
+        "silex/silex": "~1.3",
+        "oldsound/rabbitmq-bundle": "~1.8",
+        "knplabs/console-service-provider": "~1.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.2"
+        "phpunit/phpunit": "~4.8"
     },
     "autoload": {
         "psr-0": { "fiunchinho": "src/" }

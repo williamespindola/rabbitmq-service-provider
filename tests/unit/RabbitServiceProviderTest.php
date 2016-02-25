@@ -2,6 +2,11 @@
 
 namespace fiunchinho\Silex\Provider;
 
+use OldSound\RabbitMqBundle\RabbitMq\Consumer;
+use OldSound\RabbitMqBundle\RabbitMq\Producer;
+use OldSound\RabbitMqBundle\RabbitMq\RpcClient;
+use OldSound\RabbitMqBundle\RabbitMq\RpcServer;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
 use Silex\Application;
 
 class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
@@ -11,26 +16,11 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
 
         $app->register(new RabbitServiceProvider(), [
-            'rabbit.connections' => [
-                'default' => [
-                    'host' => 'localhost',
-                    'port' => 5672,
-                    'user' => 'guest',
-                    'password' => 'guest',
-                    'vhost' => '/'
-                ],
-                'another' => [
-                    'host' => 'localhost',
-                    'port' => 5672,
-                    'user' => 'guest',
-                    'password' => 'guest',
-                    'vhost' => '/'
-                ]
-            ]
+            'rabbit.connections' => $this->givenValidConnectionDefinitions()
         ]);
 
-        $this->assertInstanceOf("PhpAmqpLib\Connection\AMQPConnection", $app['rabbit.connection']['default']);
-        $this->assertInstanceOf("PhpAmqpLib\Connection\AMQPConnection", $app['rabbit.connection']['another']);
+        $this->assertInstanceOf(AMQPStreamConnection::class, $app['rabbit.connection']['default']);
+        $this->assertInstanceOf(AMQPStreamConnection::class, $app['rabbit.connection']['another']);
     }
 
     public function testProducersAreRegistered()
@@ -38,7 +28,7 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
 
         $app->register(new RabbitServiceProvider(), [
-            'rabbit.connections' => $this->givenSomeValidConnections(),
+            'rabbit.connections' => $this->givenValidConnectionDefinitions(),
             'rabbit.producers' => [
                 'a_producer' => [
                     'connection'        => 'default',
@@ -51,8 +41,8 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $this->assertInstanceOf("OldSound\RabbitMqBundle\RabbitMq\Producer", $app['rabbit.producer']['a_producer']);
-        $this->assertInstanceOf("OldSound\RabbitMqBundle\RabbitMq\Producer", $app['rabbit.producer']['second_producer']);
+        $this->assertInstanceOf(Producer::class, $app['rabbit.producer']['a_producer']);
+        $this->assertInstanceOf(Producer::class, $app['rabbit.producer']['second_producer']);
     }
 
     public function testConsumersAreRegistered()
@@ -60,7 +50,7 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
 
         $app->register(new RabbitServiceProvider(), [
-            'rabbit.connections' => $this->givenSomeValidConnections(),
+            'rabbit.connections' => $this->givenValidConnectionDefinitions(),
             'rabbit.consumers' => [
                 'a_consumer' => [
                     'connection'        => 'default',
@@ -77,8 +67,8 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $this->assertInstanceOf("OldSound\RabbitMqBundle\RabbitMq\Consumer", $app['rabbit.consumer']['a_consumer']);
-        $this->assertInstanceOf("OldSound\RabbitMqBundle\RabbitMq\Consumer", $app['rabbit.consumer']['second_consumer']);
+        $this->assertInstanceOf(Consumer::class, $app['rabbit.consumer']['a_consumer']);
+        $this->assertInstanceOf(Consumer::class, $app['rabbit.consumer']['second_consumer']);
     }
 
     public function testAnonymousConsumersAreRegistered()
@@ -86,7 +76,7 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
 
         $app->register(new RabbitServiceProvider(), [
-            'rabbit.connections' => $this->givenSomeValidConnections(),
+            'rabbit.connections' => $this->givenValidConnectionDefinitions(),
             'rabbit.anon_consumers' => [
                 'anoymous' => [
                     'connection'        => 'another',
@@ -96,7 +86,7 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $this->assertInstanceOf("OldSound\RabbitMqBundle\RabbitMq\Consumer", $app['rabbit.anonymous_consumer']['anoymous']);
+        $this->assertInstanceOf(Consumer::class, $app['rabbit.anonymous_consumer']['anoymous']);
     }
 
     public function testMultiplesConsumersAreRegistered()
@@ -104,7 +94,7 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
 
         $app->register(new RabbitServiceProvider(), [
-            'rabbit.connections' => $this->givenSomeValidConnections(),
+            'rabbit.connections' => $this->givenValidConnectionDefinitions(),
             'rabbit.multiple_consumers' => [
                 'multiple' => [
                     'connection'        => 'default',
@@ -116,7 +106,7 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $this->assertInstanceOf("OldSound\RabbitMqBundle\RabbitMq\Consumer", $app['rabbit.multiple_consumer']['multiple']);
+        $this->assertInstanceOf(Consumer::class, $app['rabbit.multiple_consumer']['multiple']);
     }
 
     public function testRpcClientsAreRegistered()
@@ -124,7 +114,7 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
 
         $app->register(new RabbitServiceProvider(), [
-            'rabbit.connections' => $this->givenSomeValidConnections(),
+            'rabbit.connections' => $this->givenValidConnectionDefinitions(),
             'rabbit.rpc_clients' => [
                 'a_client' => [
                     'connection'                    => 'another',
@@ -133,7 +123,7 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $this->assertInstanceOf("OldSound\RabbitMqBundle\RabbitMq\RpcClient", $app['rabbit.rpc_client']['a_client']);
+        $this->assertInstanceOf(RpcClient::class, $app['rabbit.rpc_client']['a_client']);
     }
 
     public function testRpcServersAreRegistered()
@@ -141,7 +131,7 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
 
         $app->register(new RabbitServiceProvider(), [
-            'rabbit.connections' => $this->givenSomeValidConnections(),
+            'rabbit.connections' => $this->givenValidConnectionDefinitions(),
             'rabbit.rpc_servers' => [
                 'a_server' => [
                     'connection'    => 'another',
@@ -151,10 +141,10 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $this->assertInstanceOf("OldSound\RabbitMqBundle\RabbitMq\RpcServer", $app['rabbit.rpc_server']['a_server']);
+        $this->assertInstanceOf(RpcServer::class, $app['rabbit.rpc_server']['a_server']);
     }
 
-    private function givenSomeValidConnections()
+    private function givenValidConnectionDefinitions()
     {
         return [
             'default' => [
