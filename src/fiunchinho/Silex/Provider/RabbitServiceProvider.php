@@ -217,6 +217,13 @@ class RabbitServiceProvider implements ServiceProviderInterface
                 $connection = $this->getConnection($app, $options, $app['rabbit.connections']);
                 $consumer = new MultipleConsumer($connection);
                 $consumer->setExchangeOptions($options['exchange_options']);
+
+                foreach ($options['queues'] as &$queue) {
+                    if (isset($queue['callback'])) {
+                        $queue['callback'] = array($app[$queue['callback']], 'execute');
+                    }
+                }
+
                 $consumer->setQueues($options['queues']);
 
                 if (array_key_exists('qos_options', $options)) {
@@ -286,7 +293,7 @@ class RabbitServiceProvider implements ServiceProviderInterface
                 $connection = $this->getConnection($app, $options, $app['rabbit.connections']);
                 $server = new RpcServer($connection);
                 $server->initServer($name);
-                $server->setCallback(array($options['callback'], 'execute'));
+                $server->setCallback(array($app[$options['callback']], 'execute'));
 
                 if (array_key_exists('qos_options', $options)) {
                     $server->setQosOptions(
