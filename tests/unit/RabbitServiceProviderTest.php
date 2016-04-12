@@ -135,7 +135,7 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
             'rabbit.rpc_servers' => [
                 'a_server' => [
                     'connection'    => 'another',
-                    'callback'      => 'random_int_server',
+                    'callback'      => 'debug',
                     'qos_options'   => ['prefetch_size' => 0, 'prefetch_count' => 1, 'global' => false]
                 ]
             ]
