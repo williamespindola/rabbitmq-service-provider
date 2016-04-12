@@ -2,6 +2,7 @@
 
 namespace fiunchinho\Silex\Command;
 
+use OldSound\RabbitMqBundle\RabbitMq\Consumer as RabbitConsumer;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -10,6 +11,12 @@ use Knp\Command\Command as BaseCommand;
 
 class Consumer extends BaseCommand
 {
+    /** @var int */
+    private $amount;
+
+    /** @var RabbitConsumer */
+    private $consumer;
+
     protected function configure()
     {
         $this
@@ -54,7 +61,7 @@ class Consumer extends BaseCommand
         $this->consumer->consume($this->amount);
     }
 
-    protected function getConsumerInstance($input)
+    protected function getConsumerInstance(InputInterface $input)
     {
     	$app = $this->getSilexApplication();
     	return $app['rabbit.consumer'][$input->getArgument('name')];
