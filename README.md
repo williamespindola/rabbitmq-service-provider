@@ -134,4 +134,4 @@ We rely on the [Knp\Provider\ConsoleServiceProvider](https://github.com/KnpLabs/
 
 ## Credits ##
 
-- [RabbitMqBundle](http://github.com/videlalvaro/RabbitMqBundle) bundle by [Alvaro Videla](https://twitter.com/old_sound)
+- [RabbitMqBundle](https://github.com/php-amqplib/RabbitMqBundle) bundle, originally by [Alvaro Videla](https://twitter.com/old_sound)
