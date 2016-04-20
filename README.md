@@ -4,6 +4,9 @@
 
 This Silex service provider incorporates the awesome [RabbitMqBundle](http://github.com/videlalvaro/RabbitMqBundle) into your Silex Application. Installing this bundle created by [Alvaro Videla](https://twitter.com/old_sound) you can use [RabbitMQ](http://www.rabbitmq.com/) messaging features in your application, using the [php-amqplib](http://github.com/videlalvaro/php-amqplib) library.
 
+This is a fork of fiunchinho's [rabbitmq-service-provider](https://github.com/fiunchinho/rabbitmq-service-provider), the original maintainer does not continue maintenance.
+Original namespaces have been kept for easy upgrading.
+
 After installing this service provider, sending messages from a controller would be something like
 
 ```php
@@ -135,3 +138,4 @@ We rely on the [Knp\Provider\ConsoleServiceProvider](https://github.com/KnpLabs/
 ## Credits ##
 
 - [RabbitMqBundle](https://github.com/php-amqplib/RabbitMqBundle) bundle, originally by [Alvaro Videla](https://twitter.com/old_sound)
+- [rabbitmq-service-provider](https://github.com/fiunchinho/rabbitmq-service-provider) by fiunchinho
