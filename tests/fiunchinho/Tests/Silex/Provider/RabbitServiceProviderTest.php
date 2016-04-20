@@ -1,7 +1,8 @@
 <?php
 
-namespace fiunchinho\Silex\Provider;
+namespace fiunchinho\Tests\Silex\Provider;
 
+use fiunchinho\Silex\Provider\RabbitServiceProvider;
 use OldSound\RabbitMqBundle\RabbitMq\Consumer;
 use OldSound\RabbitMqBundle\RabbitMq\Producer;
 use OldSound\RabbitMqBundle\RabbitMq\RpcClient;
