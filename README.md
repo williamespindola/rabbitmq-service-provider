@@ -106,10 +106,11 @@ require_once 'vendor/autoload.php';
 use Silex\Application;
 use fiunchinho\Silex\Provider\RabbitServiceProvider;
 use fiunchinho\Silex\Command\Consumer;
-use Knp\Provider\ConsoleServiceProvider;
+use Ivoba\Silex\Provider\ConsoleServiceProvider;
 
 $app = new Application();
 require __DIR__.'/config/dev.php';
+
 $app->register(new RabbitServiceProvider(), array(
     'rabbit.consumers' => [
         'my_consumer' => [
@@ -120,19 +121,19 @@ $app->register(new RabbitServiceProvider(), array(
         ]
     ]
 ));
+
 $app->register(new ConsoleServiceProvider(), array(
     'console.name'              => 'MyApplication',
     'console.version'           => '1.0.0',
     'console.project_directory' => __DIR__
 ));
 
-
 $application = $app['console'];
 $application->add(new Consumer());
 $application->run();
 ```
 
-We rely on the [Knp\Provider\ConsoleServiceProvider](https://github.com/KnpLabs/ConsoleServiceProvider) to make things easier, so you have to register it too. You can create new commands by inheriting from the example Consumer, and adding them as the example above.
+We rely on the [Ivoba\Silex\Provider\ConsoleServiceProvider](https://github.com/ivoba/console-service-provider) to make things easier, so you have to register it too. You can create new commands by inheriting from the example Consumer, and adding them as the example above.
 
 
 ## Credits ##
