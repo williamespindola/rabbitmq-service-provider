@@ -8,27 +8,27 @@ use OldSound\RabbitMqBundle\RabbitMq\Producer;
 use OldSound\RabbitMqBundle\RabbitMq\RpcClient;
 use OldSound\RabbitMqBundle\RabbitMq\RpcServer;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
-use Silex\Application;
+use Pimple\Container;
 
 class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
 {
     public function testConnectionsAreRegistered()
     {
-        $app = new Application();
+        $container = new Container();
 
-        $app->register(new RabbitServiceProvider(), [
+        $container->register(new RabbitServiceProvider(), [
             'rabbit.connections' => $this->givenValidConnectionDefinitions()
         ]);
 
-        $this->assertInstanceOf(AMQPStreamConnection::class, $app['rabbit.connection']['default']);
-        $this->assertInstanceOf(AMQPStreamConnection::class, $app['rabbit.connection']['another']);
+        $this->assertInstanceOf(AMQPStreamConnection::class, $container['rabbit.connection']['default']);
+        $this->assertInstanceOf(AMQPStreamConnection::class, $container['rabbit.connection']['another']);
     }
 
     public function testProducersAreRegistered()
     {
-        $app = new Application();
+        $container = new Container();
 
-        $app->register(new RabbitServiceProvider(), [
+        $container->register(new RabbitServiceProvider(), [
             'rabbit.connections' => $this->givenValidConnectionDefinitions(),
             'rabbit.producers' => [
                 'a_producer' => [
@@ -42,15 +42,19 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $this->assertInstanceOf(Producer::class, $app['rabbit.producer']['a_producer']);
-        $this->assertInstanceOf(Producer::class, $app['rabbit.producer']['second_producer']);
+        $this->assertInstanceOf(Producer::class, $container['rabbit.producer']['a_producer']);
+        $this->assertInstanceOf(Producer::class, $container['rabbit.producer']['second_producer']);
     }
 
     public function testConsumersAreRegistered()
     {
-        $app = new Application();
+        $container = new Container();
 
-        $app->register(new RabbitServiceProvider(), [
+        $container['debug'] = function() {
+            return true;
+        };
+
+        $container->register(new RabbitServiceProvider(), [
             'rabbit.connections' => $this->givenValidConnectionDefinitions(),
             'rabbit.consumers' => [
                 'a_consumer' => [
@@ -68,15 +72,19 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $this->assertInstanceOf(Consumer::class, $app['rabbit.consumer']['a_consumer']);
-        $this->assertInstanceOf(Consumer::class, $app['rabbit.consumer']['second_consumer']);
+        $this->assertInstanceOf(Consumer::class, $container['rabbit.consumer']['a_consumer']);
+        $this->assertInstanceOf(Consumer::class, $container['rabbit.consumer']['second_consumer']);
     }
 
     public function testAnonymousConsumersAreRegistered()
     {
-        $app = new Application();
+        $container = new Container();
 
-        $app->register(new RabbitServiceProvider(), [
+        $container['debug'] = function() {
+            return true;
+        };
+
+        $container->register(new RabbitServiceProvider(), [
             'rabbit.connections' => $this->givenValidConnectionDefinitions(),
             'rabbit.anon_consumers' => [
                 'anoymous' => [
@@ -87,14 +95,18 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $this->assertInstanceOf(Consumer::class, $app['rabbit.anonymous_consumer']['anoymous']);
+        $this->assertInstanceOf(Consumer::class, $container['rabbit.anonymous_consumer']['anoymous']);
     }
 
     public function testMultiplesConsumersAreRegistered()
     {
-        $app = new Application();
+        $container = new Container();
 
-        $app->register(new RabbitServiceProvider(), [
+        $container['debug'] = function() {
+            return true;
+        };
+
+        $container->register(new RabbitServiceProvider(), [
             'rabbit.connections' => $this->givenValidConnectionDefinitions(),
             'rabbit.multiple_consumers' => [
                 'multiple' => [
@@ -107,14 +119,14 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $this->assertInstanceOf(Consumer::class, $app['rabbit.multiple_consumer']['multiple']);
+        $this->assertInstanceOf(Consumer::class, $container['rabbit.multiple_consumer']['multiple']);
     }
 
     public function testRpcClientsAreRegistered()
     {
-        $app = new Application();
+        $container = new Container();
 
-        $app->register(new RabbitServiceProvider(), [
+        $container->register(new RabbitServiceProvider(), [
             'rabbit.connections' => $this->givenValidConnectionDefinitions(),
             'rabbit.rpc_clients' => [
                 'a_client' => [
@@ -124,14 +136,18 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $this->assertInstanceOf(RpcClient::class, $app['rabbit.rpc_client']['a_client']);
+        $this->assertInstanceOf(RpcClient::class, $container['rabbit.rpc_client']['a_client']);
     }
 
     public function testRpcServersAreRegistered()
     {
-        $app = new Application();
+        $container = new Container();
 
-        $app->register(new RabbitServiceProvider(), [
+        $container['debug'] = function() {
+            return true;
+        };
+
+        $container->register(new RabbitServiceProvider(), [
             'rabbit.connections' => $this->givenValidConnectionDefinitions(),
             'rabbit.rpc_servers' => [
                 'a_server' => [
@@ -142,7 +158,7 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
 
-        $this->assertInstanceOf(RpcServer::class, $app['rabbit.rpc_server']['a_server']);
+        $this->assertInstanceOf(RpcServer::class, $container['rabbit.rpc_server']['a_server']);
     }
 
     private function givenValidConnectionDefinitions()
