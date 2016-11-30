@@ -15,7 +15,7 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "silex/silex": "~2.0",
+        "pimple/pimple": "^3.0",
         "php-amqplib/rabbitmq-bundle": "~1.9",
         "ivoba/console-service-provider": "~3.0"
     },
