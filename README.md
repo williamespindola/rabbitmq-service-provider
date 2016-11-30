@@ -147,7 +147,7 @@ $application->add(new Consumer());
 $application->run();
 ```
 
-We rely on the [Ivoba\Silex\Provider\ConsoleServiceProvider](https://github.com/ivoba/console-service-provider) to make things easier, so you have to register it too. You can create new commands by inheriting from the example Consumer, and adding them as the example above.
+In this exemple we rely on the [Ivoba\Silex\Provider\ConsoleServiceProvider](https://github.com/ivoba/console-service-provider) to make things easier, so you have to install it too. You can create new commands by inheriting from the example Consumer, and adding them as the example above.
 
 
 ## Credits ##
