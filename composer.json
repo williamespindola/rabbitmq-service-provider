@@ -1,12 +1,13 @@
 {
-    "name": "e-sixt/rabbitmq-service-provider",
+    "name": "williamespindola/rabbitmq-service-provider",
     "replace": {
-        "fiunchinho/rabbitmq-service-provider": "1.0.1"
+        "fiunchinho/rabbitmq-service-provider": "1.0.1",
+        "e-sixt/rabbitmq-service-provider": "2.0.0"
     },
     "type": "silex-service-provider",
     "description": "Silex service provider for RabbitMQ. Integrates php-amqplib/rabbitmq-bundle into Silex.",
     "keywords": [ "silex", "provider", "rabbitmq", "amqp", "message", "queue" ],
-    "homepage": "https://github.com/e-sixt/rabbitmq-service-provider",
+    "homepage": "https://github.com/williamespindola/rabbitmq-service-provider",
     "license": "MIT",
     "authors": [
         {"name": "Anton Stöckl"},
