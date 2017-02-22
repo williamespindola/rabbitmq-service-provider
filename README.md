@@ -33,7 +33,7 @@ To learn what you can do with the bundle, please read the bundle's [README](http
 Require the library with Composer:
 
 ```
-$ composer require fiunchinho/rabbitmq-service-provider
+$ composer require williamespindola/rabbitmq-service-provider
 ```
 
 Then, to activate the service, register the service provider after creating your Silex Application:
