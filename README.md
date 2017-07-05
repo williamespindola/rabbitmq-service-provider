@@ -86,7 +86,11 @@ $app->register(new RabbitServiceProvider(), [
             'connection'        => 'default',
             'exchange_options'  => ['name' => 'a_exchange','type' => 'topic'],
             'queue_options'     => ['name' => 'a_queue', 'routing_keys' => ['foo.#']],
-            'callback'          => 'your_consumer_service'
+            'callback'          => 'your_consumer_service',
+            'graceful_max_execution' => [
+                'timeout' => 900,
+                'exit_code' => 10,
+            ],
         ]
     ]
 ]);
