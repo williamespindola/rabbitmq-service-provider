@@ -57,18 +57,28 @@ In the [README](https://github.com/videlalvaro/RabbitMqBundle/blob/master/README
 $app->register(new RabbitServiceProvider(), [
     'rabbit.connections' => [
         'default' => [
-            'host'      => 'localhost',
-            'port'      => 5672,
-            'user'      => 'guest',
-            'password'  => 'guest',
-            'vhost'     => '/'
+            'host'                  => 'localhost',
+            'port'                  => 5672,
+            'user'                  => 'guest',
+            'password'              => 'guest',
+            'vhost'                 => '/',
+            'lazy'                  => false,
+            'connection_timeout'    => 3,
+            'read_write_timeout'    => 6,
+            'keepalive'             => false,
+            'heartbeat'             => 3
         ],
         'another' => [
-            'host'      => 'another_host',
-            'port'      => 5672,
-            'user'      => 'guest',
-            'password'  => 'guest',
-            'vhost'     => '/'
+            'host'                  => 'another_host',
+            'port'                  => 5672,
+            'user'                  => 'guest',
+            'password'              => 'guest',
+            'vhost'                 => '/'
+            'lazy'                  => false,
+            'connection_timeout'    => 3,
+            'read_write_timeout'    => 6,
+            'keepalive'             => false,
+            'heartbeat'             => 3
         ]
     ],
     'rabbit.producers' => [
