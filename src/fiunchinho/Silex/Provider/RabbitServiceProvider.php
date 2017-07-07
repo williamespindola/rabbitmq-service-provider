@@ -165,6 +165,16 @@ class RabbitServiceProvider implements ServiceProviderInterface
                     $consumer->disableAutoSetupFabric();
                 }
 
+                if (array_key_exists('graceful_max_execution', $options)) {
+                    $grace = $options['graceful_max_execution'];
+                    if (array_key_exists('timeout', $grace)) {
+                        $consumer->setGracefulMaxExecutionDateTimeFromSecondsInTheFuture($grace['timeout']);
+                    }
+                    if (array_key_exists('exit_code', $grace)) {
+                        $consumer->setGracefulMaxExecutionTimeoutExitCode($grace['exit_code']);
+                    }
+                }
+
                 $consumers[$name] = $consumer;
             }
 
