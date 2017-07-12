@@ -42,33 +42,28 @@ class RabbitServiceProvider implements ServiceProviderInterface
             $connections = [];
 
             foreach ($container['rabbit.connections'] as $name => $options) {
-                $lazyConnection = false;
+                $connectionClass = isset($options['lazy']) && $options['lazy'] ? AMQPLazyConnection::class : AMQPConnection::class;
+                $connectionTimeout = isset($options['connection_timeout']) ? $options['connection_timeout'] : 3;
+                $readWriteTimeout = isset($options['read_write_timeout']) ? $options['read_write_timeout'] : 6;
+                $keepalive = isset($options['keepalive']) ? $options['keepalive'] : false;
+                $heartbeat = isset($options['heartbeat']) ? $options['heartbeat'] : 3;
 
-                if (isset($container['rabbit.connections'][$name]['lazy'])) {
-                    if ($container['rabbit.connections'][$name]['lazy'] === true) {
-                        $lazyConnection = true;
-                    }
-                }
-
-                switch ($lazyConnection) {
-                    case (true):
-                        $connection = new AMQPLazyConnection(
-                            $container['rabbit.connections'][$name]['host'],
-                            $container['rabbit.connections'][$name]['port'],
-                            $container['rabbit.connections'][$name]['user'],
-                            $container['rabbit.connections'][$name]['password'],
-                            $container['rabbit.connections'][$name]['vhost']
-                        );
-                        break;
-                    default:
-                        $connection = new AMQPConnection(
-                            $container['rabbit.connections'][$name]['host'],
-                            $container['rabbit.connections'][$name]['port'],
-                            $container['rabbit.connections'][$name]['user'],
-                            $container['rabbit.connections'][$name]['password'],
-                            $container['rabbit.connections'][$name]['vhost']
-                        );
-                }
+                $connection = new $connectionClass(
+                    $options['host'],
+                    $options['port'],
+                    $options['user'],
+                    $options['password'],
+                    $options['vhost'],
+                    false,
+                    'AMQPLAIN',
+                    null,
+                    'en_US',
+                    $connectionTimeout,
+                    $readWriteTimeout,
+                    null,
+                    $keepalive,
+                    $heartbeat
+                );
 
                 $connections[$name] = $connection;
             }
