@@ -110,7 +110,7 @@ class RabbitServiceProvider implements ServiceProviderInterface
 
                 //this producer doesn't define a queue
                 if (!isset($options['queue_options'])) {
-                    $options['queue_options']['name'] = null;
+                    $options['queue_options']['declare'] = false;
                 }
                 $producer->setQueueOptions($options['queue_options']);
 
