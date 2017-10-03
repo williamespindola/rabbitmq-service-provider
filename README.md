@@ -1,16 +1,12 @@
-# RabbitMq Service Provider for Silex #
+# RabbitMq Service Provider for Pimple / Silex 2 #
 
 ## About ##
 
-This Silex service provider incorporates the awesome [RabbitMqBundle](http://github.com/videlalvaro/RabbitMqBundle) into your Silex Application. Installing this bundle created by [Alvaro Videla](https://twitter.com/old_sound) you can use [RabbitMQ](http://www.rabbitmq.com/) messaging features in your application, using the [php-amqplib](http://github.com/videlalvaro/php-amqplib) library.
-
-This is a fork of fiunchinho's [rabbitmq-service-provider](https://github.com/fiunchinho/rabbitmq-service-provider), the original maintainer does not continue maintenance.
-Original namespaces have been kept for easy upgrading.
+This Pimple service provider incorporates the awesome [RabbitMqBundle](http://github.com/videlalvaro/RabbitMqBundle) into your application. Installing this bundle created by [Alvaro Videla](https://twitter.com/old_sound) you can use [RabbitMQ](http://www.rabbitmq.com/) messaging features in your application, using the [php-amqplib](http://github.com/videlalvaro/php-amqplib) library.
 
 After installing this service provider, sending messages from a controller would be something like
 
 ```php
-
 $app->post('/message', function(Request $request) use ($app){
     $producer = $app['rabbit.producer']['my_exchange_name'];
     $producer->publish('Some message');
@@ -22,7 +18,6 @@ $app->post('/message', function(Request $request) use ($app){
 Later when you want to consume 50 messages out of the queue names 'my_queue', you just run on the CLI:
 
 ```bash
-
 $ ./app/console rabbitmq:consumer -m 50 my_queue
 ```
 
@@ -36,7 +31,7 @@ Require the library with Composer:
 $ composer require williamespindola/rabbitmq-service-provider
 ```
 
-Then, to activate the service, register the service provider after creating your Silex Application:
+Then, to activate the service, register the service provider after creating your Pimple Container. With Silex 2:
 
 ```php
 
@@ -108,49 +103,7 @@ $app->register(new RabbitServiceProvider(), [
 
 Keep in mind that the callback that you choose in the consumer needs to be a service that has been registered in the Pimple container. Consumer services implement the ConsumerInterface, which has a execute() public method.
 
-## Consumers in the command line
-We recommend you to use the Consumer command to consume messages from the queues. To use this command, just create the executable for console (as in any console applicaiton)
-
-```php
-#!/usr/bin/env php
-<?php
-
-require_once 'vendor/autoload.php';
-
-use Silex\Application;
-use fiunchinho\Silex\Provider\RabbitServiceProvider;
-use fiunchinho\Silex\Command\Consumer;
-use Ivoba\Silex\Provider\ConsoleServiceProvider;
-
-$app = new Application();
-require __DIR__.'/config/dev.php';
-
-$app->register(new RabbitServiceProvider(), array(
-    'rabbit.consumers' => [
-        'my_consumer' => [
-            'connection'        => 'default',
-            'exchange_options'  => ['name' => 'my_exchange_name','type' => 'topic'],
-            'queue_options'     => ['name' => 'a_queue', 'routing_keys' => ['foo.#']],
-            'callback'          => 'my_service'
-        ]
-    ]
-));
-
-$app->register(new ConsoleServiceProvider(), array(
-    'console.name'              => 'MyApplication',
-    'console.version'           => '1.0.0',
-    'console.project_directory' => __DIR__
-));
-
-$application = $app['console'];
-$application->add(new Consumer());
-$application->run();
-```
-
-In this exemple we rely on the [Ivoba\Silex\Provider\ConsoleServiceProvider](https://github.com/ivoba/console-service-provider) to make things easier, so you have to install it too. You can create new commands by inheriting from the example Consumer, and adding them as the example above.
-
-
 ## Credits ##
 
 - [RabbitMqBundle](https://github.com/php-amqplib/RabbitMqBundle) bundle, originally by [Alvaro Videla](https://twitter.com/old_sound)
-- [rabbitmq-service-provider](https://github.com/fiunchinho/rabbitmq-service-provider) by fiunchinho
+- [rabbitmq-service-provider](https://github.com/e-Sixt/rabbitmq-service-provider) by fiunchinho & AntonStoeckl
