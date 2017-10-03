@@ -14,20 +14,20 @@
         {"name": "Jose Armesto"}
     ],
     "require": {
-        "php": ">=5.5.0",
+        "php": "^5.6|^7.0",
         "pimple/pimple": "^3.0",
-        "php-amqplib/rabbitmq-bundle": "~1.9"
+        "php-amqplib/rabbitmq-bundle": "^1.11"
     },
     "suggest": {
         "ivoba/console-service-provider": "for the rabbitmq:consumer command"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.8"
+        "phpunit/phpunit": "^4.8"
     },
     "autoload": {
-        "psr-4": { "fiunchinho\\": "src/fiunchinho" }
+        "psr-4": { "fiunchinho\\": "src" }
     },
     "autoload-dev" : {
-        "psr-4": { "fiunchinho\\Tests\\" : "tests/fiunchinho/Tests" }
+        "psr-4": { "fiunchinho\\Tests\\" : "tests/Tests" }
     }
 }
